@@ -1,4 +1,4 @@
-import { removeComponent, addTab, addComponent} from './helperFunctions'
+import { removeComponent, addTab, addComponent,moveComponentToNewTab} from './helperFunctions'
 
 import {initialData} from './initialData'
 
@@ -40,7 +40,25 @@ describe("<Tab/>", () => {
   })
 
   test('move component from one tab to another', () => {
-    const newState = moveComponentToNewTab(mockData,)
+    const mockData = {
+      layout: [
+        {
+          id:0,
+          type: 'tabby',
+          title: "tab 1",
+          components:['cat', 'dog', 'meow', 'woof']
+        },
+        {
+          id:1,
+          type: 'tabby',
+          title: "tab 2",
+          components:['strawberry', 'banana', 'apple']
+        }
+      ]
+  }
+    const newState = moveComponentToNewTab(0, 0)
+    expect(newState.layout[0].children.length).toBe(3)
+    expect(newState.layout[1].children.length).toBe(4)
   })
 })
 
