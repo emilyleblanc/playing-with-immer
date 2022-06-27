@@ -4,6 +4,10 @@ import Tab from './Tab';
 
 //immer imports
 import produce from 'immer';
+//react dnd
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd'
+
 //state for the active tab index
 export const TabContext = createContext()
 
@@ -54,6 +58,7 @@ function App() {
 
 
   return (
+    <DndProvider backend={HTML5Backend}>
     <TabContext.Provider value={[activeTab, setActiveTab]}>
     <div className="App">
       <h1>Tab</h1>
@@ -69,8 +74,8 @@ function App() {
         })
       }
     </div>
-
     </TabContext.Provider>
+    </DndProvider>
   );
 }
 

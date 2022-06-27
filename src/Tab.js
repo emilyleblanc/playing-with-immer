@@ -1,5 +1,6 @@
 import React, {useContext} from "react";
 import { TabContext } from "./App";
+import TabComponents from './TabComponents'
 
 
 const Tab = ({ tab, tabIndex, removeComponent, addComponent }) => {
@@ -8,11 +9,6 @@ const Tab = ({ tab, tabIndex, removeComponent, addComponent }) => {
 
   const [ activeTab, setActiveTab ] = useContext(TabContext)
 
-  function moveComponentToNewTab(currTabIndex, currComponentIndex) {
-    removeComponent(currTabIndex, currComponentIndex);
-    addComponent(2, "image", "img-component", "component");
-  }
-
   return (
     <li key={id}>
       <h3 onClick={() => setActiveTab(tabIndex)}>{title}</h3>
@@ -20,13 +16,12 @@ const Tab = ({ tab, tabIndex, removeComponent, addComponent }) => {
         {components.map((component, compIndex) => {
           if(activeTab === tabIndex){
             return (
-           <li
-            key={`${tabIndex}-${compIndex}`}
-            onClick={() => moveComponentToNewTab(tabIndex, compIndex)}
-          >
-            <p>{component.componentType}</p>
-          </li>
-
+                <TabComponents
+                  component={component}
+                  compIndex={compIndex}
+                  tabIndex={tabIndex}
+                  removeComponent={removeComponent}
+                  addComponent={addComponent}/>
             )
           }else{return null} 
         } 
