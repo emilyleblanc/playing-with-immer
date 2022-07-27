@@ -3,7 +3,6 @@ export const initialData = {
   layout: [
     {
       id:0,
-      type: 'tab',
       title: "Tab 1",
       components:[{
         componentType:"image",
@@ -13,7 +12,6 @@ export const initialData = {
     },
     {
       id:1,
-      type: 'tab',
       title: "Tab 2",
       components:[{
         componentType:"image",

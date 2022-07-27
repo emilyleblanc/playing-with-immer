@@ -20,8 +20,9 @@ const Tab = ({ tab, tabIndex, removeComponent, addComponent }) => {
                   component={component}
                   compIndex={compIndex}
                   tabIndex={tabIndex}
-                  removeComponent={removeComponent}
-                  addComponent={addComponent}/>
+                  //removeComponent={removeComponent}
+                  //addComponent={addComponent}
+                  />
             )
           }else{return null} 
         } 

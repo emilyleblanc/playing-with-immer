@@ -15,73 +15,38 @@ function App() {
 
   //set up the state of the layout
   const { layout } = initialData
-  const [ state, setState ] = useState(layout)
+  // const [ state, setState ] = useState(layout)
   const [ activeTab, setActiveTab] = useState(0)
 
- const initialState = layout
- console.log(initialState)
 
- const curriedLayoutReducer = produce(handleTabs)
 
- const [ states, dispatch ] = useReducer(curriedLayoutReducer, initialState)
 
-  function handleTabs(draft, action){
-    switch(action.type){
-      case 'ADD_TAB':
-       setState(
-        produce(
-          draft => {
-            draft.push(
-              {
-                id: action.id, 
-                title:action.title,
-                components: []
-              }
-            )
-          }
-        )
-       )
-        return 
-        default: 
-        return initialState
-    }
-  }
-  // function addTab( id, type, title ){
-  //   setState(
-  //     produce(draft => {
-  //     draft.push({
-  //       id, 
-  //       type,
-  //       title, 
-  //       components:[]
-  //     })
-  //   }))
-  // }
-
-  function removeTab( tabIndex){
-    setState(
-      produce(draft => {
-        draft.splice( tabIndex, 1)
+ const [ state, dispatch ] = useReducer(produce((draft, action) => {
+   switch(action.func){
+     case 'ADD_TAB': 
+      draft.push({
+        id: action.id, 
+        title: action.title,
+        components: []
       })
-    )
-  }
-
-  function addComponent( tabIndex, componentType, id, type){
-    setState(
-      produce( draft => {
-      draft[tabIndex].components.push({
-        componentType,
-        id, 
-        type
-      })
-    }))
-  }
-
-  function removeComponent( tabIndex, componentIndex){
-    setState(produce( state, draft => {
-      draft[tabIndex].components.splice(componentIndex, 1)
-    }))
-  }
+         break
+      case 'REMOVE_TAB':
+        draft.splice( action.tabIndex, 1)
+      break
+      case 'ADD_COMPONENT':
+        draft[action.tabIndex].components.push({
+          componentType: action.componentType,
+          id: action.id, 
+          type: action.type
+          })
+        break
+      case 'DELETE_COMPONENT':
+        draft[action.tabIndex].components.splice(action.componentIndex, 1)
+        break
+       default: 
+       break
+   }
+ }), layout)
 
 
   return (
@@ -89,15 +54,19 @@ function App() {
     <TabContext.Provider value={[activeTab, setActiveTab]}>
     <div className="App">
       <h1>Tab</h1>
-      <button onClick={() => dispatch({ type: "ADD_TAB", id: "0-3", title: "Tab 3"})}>Add Tab</button>
-      <button onClick={() => removeTab(0)}>Remove Tab</button>
-      <button onClick={() => addComponent( 0, 'image', 'img-component', 'component' )}>Add Widget</button>
-      <button onClick={() => removeComponent(0, 1)}>Remove Widget</button>
+      <button onClick={() => dispatch({ func: "ADD_TAB", id: "0-3", title: "Tab 3"})}>Add Tab</button>
+      <button onClick={() => dispatch({ func: "REMOVE_TAB", tabIndex: 1})}>Remove Tab</button>
+      <button onClick={() => dispatch({ func: "ADD_COMPONENT", tabIndex: 1, componentType: 'image', id: 0, type:'widget'  })}>Add Widget</button>
+      <button onClick={() => dispatch({ func: "DELETE_COMPONENT", tabIndex: 1, componentIndex: 1})}>Remove Widget</button> 
       {activeTab}
 
       {
         state.map((tab, tabIndex) => {
-          return <Tab tabIndex={tabIndex} tab={tab} removeComponent={removeComponent} addComponent={addComponent}/>
+          return <Tab 
+          tabIndex={tabIndex} tab={tab} 
+          //removeComponent={removeComponent} 
+          //addComponent={addComponent}
+          />
         })
       }
     </div>
