@@ -1,4 +1,4 @@
-import React, { useState , createContext } from 'react';
+import React, { useState , createContext, useReducer } from 'react';
 import { initialData } from './initialData';
 import Tab from './Tab';
 
@@ -18,18 +18,45 @@ function App() {
   const [ state, setState ] = useState(layout)
   const [ activeTab, setActiveTab] = useState(0)
 
+ const initialState = layout
+ console.log(initialState)
 
-  function addTab( id, type, title ){
-    setState(
-      produce(draft => {
-      draft.push({
-        id, 
-        type,
-        title, 
-        components:[]
-      })
-    }))
+ const curriedLayoutReducer = produce(handleTabs)
+
+ const [ states, dispatch ] = useReducer(curriedLayoutReducer, initialState)
+
+  function handleTabs(draft, action){
+    switch(action.type){
+      case 'ADD_TAB':
+       setState(
+        produce(
+          draft => {
+            draft.push(
+              {
+                id: action.id, 
+                title:action.title,
+                components: []
+              }
+            )
+          }
+        )
+       )
+        return 
+        default: 
+        return initialState
+    }
   }
+  // function addTab( id, type, title ){
+  //   setState(
+  //     produce(draft => {
+  //     draft.push({
+  //       id, 
+  //       type,
+  //       title, 
+  //       components:[]
+  //     })
+  //   }))
+  // }
 
   function removeTab( tabIndex){
     setState(
@@ -62,7 +89,7 @@ function App() {
     <TabContext.Provider value={[activeTab, setActiveTab]}>
     <div className="App">
       <h1>Tab</h1>
-      <button onClick={() => addTab( 3,'component','Art') }>Add Tab</button>
+      <button onClick={() => dispatch({ type: "ADD_TAB", id: "0-3", title: "Tab 3"})}>Add Tab</button>
       <button onClick={() => removeTab(0)}>Remove Tab</button>
       <button onClick={() => addComponent( 0, 'image', 'img-component', 'component' )}>Add Widget</button>
       <button onClick={() => removeComponent(0, 1)}>Remove Widget</button>
